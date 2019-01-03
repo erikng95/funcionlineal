@@ -1,0 +1,38 @@
+
+    Datos que se mandan a la funcion de dibujar diagonal:
+        Posicion X  (h_pos)
+        Posicion Y  (v_pos)
+        Largo       (x)
+        Ancho       (y)
+        Grosor      (g)
+
+
+-Calculo de puntos mediante la funcion lineal:
+
+     Yfin - Yini
+ a = ----------
+     Xfin - Xini
+ 
+ b = Yini - (a * Xini)    
+ 
+ f(x) = ax + b
+
+-Bucle tiene que ir de bit en bit, en vez de bytes.
+-Nuevas tablas para la mascara, la mascara cambia cada bit:
+
+tblmasl[8] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01}
+tblmas4[8] = {0x7F,0xBF,0xDF,0xEF,0xF7,0xFB,0xFD,0xFE}
+
+-Comprobar si el bit esta en el mismo byte que el anterior.
+
+Pruebas:
+funcion lineal
+mascaras
+pasar de linea
+
+Dudas:
+-Coeficiente b siempre es 0, igual no hace falta la funcion calc_b. Hay que añadir offset X y offset Y 
+-Si ancho>largo hay que cambiar el bucle para mirar la y en vez de la x. (f(y))
+
+-Si la pendiente es mayor que 1:
+cambiar 
