@@ -10,6 +10,14 @@ Funcionamiento com_B(void)    //Dibujar un rectangulo
 - Dibujar linea horizontal.
 - Dibujar linea vertical, mover x, dibujar segunda linea vertical.
 - Mover y, dibujar linea horizontal.
+
+Funcionamiento com_Tach(void)    //Dibujar un tachado
+- Leer largo,ancho,grosor desde el buffer
+- Si grosor es 0 y largo/ancho < grosor, terminar funcion.
+- Dibujar linea diagonal.
+- Activar flg_inv.
+- Dibujar linea diagonal invertida.
+
    
 //=============================================================================================================================================//
 
@@ -113,10 +121,28 @@ funcion lineal
 mascaras
 pasar de byte
 
+Añadir:
+
+   Parser.c
+    Variables:
+    - uchar flg_inv
+    Funciones:
+    - com_diag 
+
+   Imagen.c
+    Variables:
+    - extern uchar flg_inv    
+    Funciones:    
+    - dibdiag
+    - calc_pend
+    - calc_b (?)
+    - calc_punt
+
 Dudas:
 
 //=============================================================================================================================================//
-
+usar esta condicion despues de cada cambio en el pointer (?)
+     
      if (yy >= 0x20000)
        {
        selbnk();
@@ -125,6 +151,7 @@ Dudas:
        ptr += yy;
        ptr += 32;
        }
+       
   Cambia de ram (BANCO_IRAM+1)
   Resta 0x20000 a yy
   ptr apunta a la nueva RAM
@@ -136,5 +163,5 @@ Dudas:
 - Coeficiente b siempre es 0, igual no hace falta la funcion calc_b. Hay que añadir offset X y offset Y 
 
 - No se si usar ints o uchars 
-- funcion de uchar f 
+- funcion de uchar f (si se cambia de banco, despues de hacer todas las operaciones, volver al banco 2 ?)
 - "yy" e "yyy" sirven para saber si el pointer se ha pasado a otra memoria (?)
