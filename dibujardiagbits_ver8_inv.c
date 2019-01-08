@@ -131,7 +131,8 @@ void dibdiag(int l,int anch,int g)
        punt_ant = 0; /* es el punto del bit anterior del que se esta calculando */
        for (j=0;j<=l;j++) /* numero de bits en la linea */
          {
-         punt = calc_punt(a,j);   /* calculo de puntos en la funcion de linea */
+         punt = a * j;
+         punt = (int)(punt+0.5); 
          dif = punt - punt_ant; /* diferencia entre el punto del bit actual y el anterior */
          if (dif == 1) /* cambio de linea cuando el bit actual esta en la siguiente linea que el anterior bit */
            {
@@ -277,17 +278,6 @@ float calc_pend(int largo,int ancho)
     float a;
     a = ((ancho - 0) / (largo - 0)); /* pendiente = (yfin - yini) / (xfin - xini)*/
     return (a);
-}
-
-int calc_punt(float a,int x) /* f(x) = a*x + b */
-{
-    int punt;
-    float d;
-    
-    d = a * x; 
-    punt = (d + 0.5); /* redondear (pasar de float a int)*/
-    
-    return (punt);
 }
 
 int pasar_byte(int m)
