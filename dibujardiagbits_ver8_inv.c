@@ -26,7 +26,7 @@ void dibdiag(int l,int anch,int g)
   #else
    SET_BNK_ASM (BANCO_IRAM);
   #endif
-   switch (rotacion) /* y = v_pos x = (uchar)(h_pos/8) nbit = (uchar)(h_pos%8) */
+   switch (rotacion)
      {
      case 1:
        y = v_pos;
@@ -34,7 +34,7 @@ void dibdiag(int l,int anch,int g)
        x = (h_pos-g)/8;
   #else
        x = (uchar)((h_pos-g)/8);
-  #endif       
+  #endif
        nbit = (uchar)((h_pos-g)%8);
        if (h_pos < g)
          return;
@@ -112,7 +112,6 @@ void dibdiag(int l,int anch,int g)
          SET_BNK_ASM (BANCO_IRAM+1);
          yy -= 0x20000;
          y = (yy - x) / bytlin;
-         f2 == TRUE;
          }
        }
      }
@@ -226,6 +225,14 @@ void dibdiag(int l,int anch,int g)
        {
        ptr -= bytlin;
        yy -= bytlin;
+       if (yy >= 0x20000)
+         {
+         selbnk();
+         yy -= 0x20000;
+         ptr = (char *) IMAGEN;
+         ptr += yy;
+         ptr += 32; 
+         }
        }
      else
        {
@@ -272,19 +279,12 @@ float calc_pend(int largo,int ancho)
     return (a);
 }
 
-float calc_b(int xini,int yini,float a) /*Xini e Yini serian opciones de offset*/
-{
-    float b;
-    b = yini - (a*xini); /* pendiente = (yfin - yini) / (xfin - xini)*/
-    return (b);
-}
-
-int calc_punt(float a,float b,int x) /* f(x) = a*x + b */
+int calc_punt(float a,int x) /* f(x) = a*x + b */
 {
     int punt;
     float d;
     
-    d = a * x + b; 
+    d = a * x; 
     punt = (d + 0.5); /* redondear (pasar de float a int)*/
     
     return (punt);
