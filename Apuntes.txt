@@ -49,9 +49,9 @@ Variables de entrada: "l" es el numero de bits en una linea, "g" es el numero de
         - *Pointer 1 rellenar el byte de 1s (0xFF)
     - Si hay bits en el ultimo byte, incrementar Pointer1 y aplicar mascara final(masc2).
     - Pasar a la siguiente linea(ptr += bytlin), segun el valor de g; repetir los pasos anteriores.
-    - Atizar WDG;
-    - Monitor;
-- Desasignar el banco RAM.    
+    - Atizar WDG.
+    - Monitor.
+- Desasignar el banco RAM.
     
 //=============================================================================================================================================//
 
@@ -64,26 +64,26 @@ Variables de entrada: "l" es el numero de bits en una linea,"anch" es necesario 
 - Calcular la posicion del primer bit("nbit") para bucle.
 - Calcular pendiente segun el largo y ancho de la linea. 
 - Si se pasa de la memoria, cambio de memoria(BANCO_IRAM+1) y calcular nueva "y".
-- Inicializar pointer segun el valor "x" e "y".
+- Inicializar Pointer segun el valor "x" e "y".
 - Bucle en y (segun el grosor)
     - Si el flag de etiqueta en blanco esta subida, poner todos los bytes a 0.
-    - Pointer1 segun el valor de pointer.
+    - Pointer1 = Pointer.
     - Inicializar "m" con el valor de la posicion del primer bit. ("m"="nbit")
     - Inicializar "punt_ant" inicio de la linea.("punt_ant" = 0)
     - Numero de bits en "l"
         Bucle X:
         - Calcular punto del bit actual segun la funcion lineal.
-        - Si "punt-punt_ant" es mayor que 1, calcular puntos intermedios(para que no haya espacios vacios en la linea).
-        - Actualizar "punt_ant" = "punt" para sacar el diferencial con el siguiente punto.
-        - Pasar a la siguiente(s) linea(s) segun el diferencial de "punt-punt_ant".(ptr1 +=bytlin)
+        - Calcular diferencial (con respecto a el punto anterior)
+        - Si el diferencial es 1, signific que el bit actual esta en la siguiente linea. Pointer1 += bytlin
+        - Actualizar "punt_ant" = "punt" para el siguiente bit.
         - Si el bit actual esta en el mismo byte que el anterior bit, no mover Pointer1.
         - Si el bit actual esta en el siguiente byte, incrementar Pointer1.
         - Segun el valor de "m" (posicion del bit actual) calcular mascara.
         - Incrementar "m";
         - Aplicar mascara al *Pointer1.
     - Pasar a la siguiente linea(ptr += bytlin), segun el valor de g; repetir los pasos anteriores.
-    - Atizar WDG;
-    - Monitor;
+    - Atizar WDG.
+    - Monitor.
 - Desasignar el banco RAM.    
     
 //=============================================================================================================================================//
@@ -110,7 +110,7 @@ Notas:
 -Bucle tiene que ir de bit en bit, en vez de bytes.
 -Nuevas tablas para la mascara, la mascara cambia cada bit:
 
-tblmasd[8] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01} 
+uchar	tblbit[8]   = { 0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01 };
 
 1000 0000 | 0100 0000 | 0010 0000 | 0001 0000 | 0000 1000 | 0000 0100 | 0000 0010 | 0000 0001
 
@@ -120,6 +120,7 @@ Pruebas:
 funcion lineal
 mascaras
 pasar de byte
+puntos intermedios
 
 Añadir:
 
@@ -134,10 +135,15 @@ Añadir:
     - extern uchar flg_inv    
     Funciones:    
     - dibdiag
-    - calc_pend
-    - calc_b (?)
-    - calc_punt
-
+    - pasar_byte
+    
+    
+    tablas0.tbl
+     tabla del parser meter com_diag
+      
+    
+    
+    
 Dudas:
 
 //=============================================================================================================================================//
@@ -165,3 +171,4 @@ usar esta condicion despues de cada cambio en el pointer (?)
 - No se si usar ints o uchars 
 - funcion de uchar f (si se cambia de banco, despues de hacer todas las operaciones, volver al banco 2 ?)
 - "yy" e "yyy" sirven para saber si el pointer se ha pasado a otra memoria (?)
+- flgbln esta programado para eliminar todos los bits en el campo.
