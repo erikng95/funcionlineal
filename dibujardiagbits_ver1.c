@@ -86,7 +86,7 @@ void dibdiag(int l,int anch,int g)
           if (m>7)
                 m = 0;
             masc1 = tblmasd[m];
-            *ptr = (*ptr & ~masc1) | masc1;
+            *ptr = masc1;
             m++;
            }
          if (f == TRUE)
