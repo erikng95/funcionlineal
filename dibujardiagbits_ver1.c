@@ -13,43 +13,10 @@ void dibdiag(int l,int anch,int g)
    uchar huge *ptr;
    uchar huge *ptr1;
    long yy,yyy;
-   
+
 /* banco de imagen */
    SET_BNK_ASM (BANCO_IRAM);
-   switch (rotacion) /* y = v_pos x = (uchar)(h_pos/8) nbit = (uchar)(h_pos%8) */
-     {
-     case 1:
-       y = v_pos;
-       x = (uchar)((h_pos-g)/8);
-       nbit = (uchar)((h_pos-g)%8);
-       if (h_pos < g)
-         return;
-       n = l;		/* guarda el largo */
-       l = anch;		/* el largo pasa a ser el ancho */
-       anch = l;		/* el ancho pasa a ser el largo */
-       break;
-     case 2:
-       y = v_pos-g;
-       x = (uchar)((h_pos-l)/8);
-       nbit = (uchar)((h_pos-l)%8);
-       if (v_pos < g  ||  h_pos < l)
-         return;
-       break;
-     case 3:
-       y = v_pos-l;
-       x = (uchar)(h_pos/8);
-       nbit = (uchar)(h_pos%8);
-       n = l;		/* guarda el largo */
-       l = anch;		/* el largo pasa a ser el ancho */
-       anch = l;		/* el ancho pasa a ser el largo */
-       break;
-     default:
-       y = v_pos;
-       x = (uchar)(h_pos/8);
-       nbit = (uchar)(h_pos%8);
-       break;
-     }
-   a = calc_pend(l,anch);  
+   a = calc_pend(l,anch);
    ptr = (uchar huge *) IMAGEN;
    yy = cal_yy(); /* return (((long)y*bytlin) + x) */
    if (yy >= 0x20000)
@@ -64,49 +31,49 @@ void dibdiag(int l,int anch,int g)
      if (flgbln == TRUE)				/* En blanco */
        {
        if (l > 0)
-         memset((ptr),0x00,l);     
+         memset((ptr),0x00,l);
        }
      else
        {
        ptr1 = ptr;
        yyy = yy;
-       m = nbit;  /*el paso de bit en bit y hacer el cambio de byte*/     
+       m = nbit;  /*el paso de bit en bit y hacer el cambio de byte*/
          f = FALSE;
          punt_ant = 0; /*es el punto del bit anterior del que se esta calculando*/
          for (j=0;j<l;j++) /* numero de bits en la linea */
-           {    
+           {
            punt = calc_punt(a,j);   /* calculo de puntos en la funcion de linea */
            if ((m%8) == 0) /* el bit actual esta en el siguiente byte */
            {
-               ptr1++;    /*cambio de byte*/          
-               yyy++; 
+               ptr1++;    /*cambio de byte*/
+               yyy++;
            }
            dif = punt-punt_ant;
            if (dif == 1)
              ptr1 += bytlin;
-             yyy += bytlin;         
+             yyy += bytlin;
            if (dif > 1)
            {
-            dif_med = (dif/2);   
+            dif_med = (dif/2);
            for(punt_inter=0;punt_inter<dif_med;punt_inter++)
            {
-                
+
              ptr1 += bytlin;
-             yyy += bytlin;                
-             masc1 = tblmasd[m];          
-            *ptr = (*ptr & ~masc1) | masc1;        
+             yyy += bytlin;
+             masc1 = tblmasd[m];
+            *ptr = (*ptr & ~masc1) | masc1;
            }
             dif_med = ((dif/2) + (dif%2));
             for(punt_inter=0;punt_inter<(dif_med-1);punt_inter++)
            {
-                
+
              ptr1 += bytlin;
              yyy += bytlin;
-             masc1 = tblmasd[m+1];          
-            *ptr = (*ptr & ~masc1) | masc1;        
+             masc1 = tblmasd[m+1];
+            *ptr = (*ptr & ~masc1) | masc1;
            }
            }
-          punt_ant = punt;            
+          punt_ant = punt;
           if (yyy >= 0x20000)
              {
              selbnk();
@@ -117,10 +84,10 @@ void dibdiag(int l,int anch,int g)
              f = TRUE;
              }
           if (m>7)
-                m = 0;            
-            masc1 = tblmasd[m];          
+                m = 0;
+            masc1 = tblmasd[m];
             *ptr = (*ptr & ~masc1) | masc1;
-            m++;            
+            m++;
            }
          if (f == TRUE)
            SET_BNK_ASM (BANCO_IRAM);
@@ -133,7 +100,7 @@ void dibdiag(int l,int anch,int g)
        yy -= 0x20000;
        ptr = (char *) IMAGEN;
        ptr += yy;
-       ptr += 32; 
+       ptr += 32;
        }
      _WATCHDOG;
      tstmon();                      	/* Mirar si llamar a monitor */
@@ -181,23 +148,23 @@ int calc_punt(float a,float b,int x) /* f(x) = a*x + b */
 {
     int punt;
     float d;
-    
-    d = a * x + b; 
+
+    d = a * x + b;
     punt = (d + 0.5); /* redondear (pasar de float a int)*/
-    
+
     return (punt);
 }
 
 
-/* 
+/*
 
 int calc_punt(float a,int x)
-{ 
+{
 
 float d;
 d = a * x;
 return ((int)d+ 0.5);
 
-} 
+}
 
 */
